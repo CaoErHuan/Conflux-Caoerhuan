@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="author" content="order by dede58.com"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>航班延误自动赔付系统——赔付</title>
+<meta name="description" content="">
+<meta name="author" content="templatemo">
+<!--<link href='http://fonts.useso.com/css?family=Open+Sans:400,300,400italic,700' rel='stylesheet' type='text/css'>-->
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/templatemo-style.css" rel="stylesheet">
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!--	<script src="https://unpkg.com/@metamask/detect-provider/dist/detect-provider.min.js"></script>-->
+	<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+
+</head>
+<body>
+<!-- Left column -->
+<div class="templatemo-flex-row">
+	<div class="templatemo-sidebar">
+		<header class="templatemo-site-header">
+			<!--          <div class="square"></div>-->
+			<h1>ETH—Chainlink<br></br>区块链-航班延误自动赔付平台</h1>
+		</header>
+		<div class="profile-photo-container">
+			<img src="img/chainlink.jpg" alt="Profile Photo" class="img-responsive">
+			<div class="profile-photo-overlay"></div>
+		</div>
+		<!-- Search box -->
+		<form class="templatemo-search-form" role="search">
+			<div class="input-group">
+				<button type="submit" class="fa fa-search"></button>
+				<input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">
+			</div>
+		</form>
+		<div class="mobile-menu-icon">
+			<i class="fa fa-bars"></i>
+		</div>
+		<nav class="templatemo-left-nav">
+			<ul>
+<!--				<li><a href="index.html" ><i class="fa fa-home fa-fw"></i>登录</a></li>-->
+				<!--            <li><a href="data-visualization.html"><i class="fa fa-bar-chart fa-fw"></i>Charts</a></li>-->
+				<li><a href="query.html"><i class="fa fa-map-marker fa-fw"></i>合同创建</a></li>
+				<li><a href="compensate.html" class="active"><i class="fa fa-database fa-fw"></i>赔付</a></li>
+				<!--            <li><a href="manage-users.html"><i class="fa fa-users fa-fw"></i>Manage Users</a></li>-->
+<!--				<li><a href="preferences.html"><i class="fa fa-sliders fa-fw"></i>CHAINLINK配置</a></li>-->
+				<!--            <li><a href="login.html"><i class="fa fa-eject fa-fw"></i>Sign Out</a></li>-->
+			</ul>
+		</nav>
+	</div>
+  <!-- Main content -->
+  <div class="templatemo-content col-1 light-gray-bg">
+	<div class="templatemo-top-nav-container">
+	  <div class="row">
+		<nav class="templatemo-top-nav col-lg-12 col-md-12">
+		  <ul class="text-uppercase">
+			<li><a href="" class="active">Admin panel</a></li>
+		  </ul>
+		</nav>
+	  </div>
+	</div>
+	<div class="templatemo-content-container">
+	  <div class="templatemo-content-widget white-bg">
+		<h2 class="margin-bottom-10">赔付界面</h2>
+		<div class="panel panel-default no-border">
+		  <div class="panel-heading border-radius-10">
+			<h2>赔付</h2>
+		  </div>
+		  <div class="panel-body">
+			<div class="templatemo-flex-row flex-content-row margin-bottom-30">
+			  <div class="col-1">
+				<div id="gauge_div" class="templatemo-chart">
+                  	<input type="text" id="pei" class="textlocation" placeholder="请输入你的赔付的合约地址"><br>
+					<input type="text" id="query1" class="textlocation" placeholder="请输入你的航班日期"> <br>
+					<input type="text" id="query2" class="textlocation" placeholder="请输入你航班号">  <br>
+					<button id="chaxun" class="textlocation" >查询状态与赔付</button>
+                </div>
+				<h3 class="text-center margin-bottom-5">赔付的交易哈希为: <span id="money"></span></h3>
+				<p class="text-center"></p>
+			  </div>
+			</div>
+		  </div>
+		</div>
+	</div>
+  </div>
+</div>
+
+	<script type="text/javascript" src="js/jquery-1.11.2.min.js"></script> <!-- jQuery -->
+	<script type="text/javascript" src="js/bootstrap-filestyle.min.js"></script>
+	<!-- http://markusslima.github.io/bootstrap-filestyle/ -->
+	<script type="text/javascript" src="js/templatemo-script.js"></script> <!-- Templatemo Script -->
+	<script type="text/javascript" src="js/myFunction.js"></script> <!-- 我的js函数-->
+	<script>
+		// var checkKey = undefined;
+		const provider = new Web3.providers.WebsocketProvider("ws://59.110.220.18:8546")
+		var web3 = new Web3(provider);
+		var target_address = "";
+		var blockNumber;
+
+		var checkKey = undefined;
+		var address = "0x53fD27EE81cD5868153916666aFC23F5ce14cb2e";
+
+		$('#chaxun').click(function () {
+			var _id = $('#query2').val();
+			var _date = $('#query1').val();
+			var data = "订单" + $('#pei').val();
+			const addr = $('#pei').val();
+			const abi = [
+				{
+					"constant": false,
+					"inputs": [
+						{
+							"name": "_jobId",
+							"type": "bytes32"
+						}
+					],
+					"name": "requestState",
+					"outputs": [
+						{
+							"name": "requestId",
+							"type": "bytes32"
+						}
+					],
+					"payable": false,
+					"stateMutability": "nonpayable",
+					"type": "function"
+				},
+				{
+					"constant": false,
+					"inputs": [],
+					"name": "compensate",
+					"outputs": [],
+					"payable": false,
+					"stateMutability": "nonpayable",
+					"type": "function"
+				},
+				{
+					"constant": false,
+					"inputs": [],
+					"name": "burn",
+					"outputs": [],
+					"payable": false,
+					"stateMutability": "nonpayable",
+					"type": "function"
+				},
+				{
+					"constant": false,
+					"inputs": [
+						{
+							"name": "_requestId",
+							"type": "bytes32"
+						},
+						{
+							"name": "_temp",
+							"type": "bytes32"
+						}
+					],
+					"name": "fulfillFlight",
+					"outputs": [],
+					"payable": false,
+					"stateMutability": "nonpayable",
+					"type": "function"
+				},
+				{
+					"constant": true,
+					"inputs": [
+						{
+							"name": "x",
+							"type": "bytes32"
+						}
+					],
+					"name": "bytes32ToString",
+					"outputs": [
+						{
+							"name": "",
+							"type": "string"
+						}
+					],
+					"payable": false,
+					"stateMutability": "view",
+					"type": "function"
+				},
+				{
+					"constant": false,
+					"inputs": [
+						{
+							"name": "_date",
+							"type": "string"
+						},
+						{
+							"name": "_id",
+							"type": "string"
+						}
+					],
+					"name": "getState",
+					"outputs": [],
+					"payable": false,
+					"stateMutability": "nonpayable",
+					"type": "function"
+				},
+				{
+					"constant": true,
+					"inputs": [],
+					"name": "state",
+					"outputs": [
+						{
+							"name": "",
+							"type": "string"
+						}
+					],
+					"payable": false,
+					"stateMutability": "view",
+					"type": "function"
+				},
+				{
+					"inputs": [
+						{
+							"name": "_date",
+							"type": "string"
+						},
+						{
+							"name": "_id",
+							"type": "string"
+						}
+					],
+					"payable": false,
+					"stateMutability": "nonpayable",
+					"type": "constructor"
+				},
+				{
+					"payable": true,
+					"stateMutability": "payable",
+					"type": "fallback"
+				},
+				{
+					"anonymous": false,
+					"inputs": [
+						{
+							"indexed": true,
+							"name": "id",
+							"type": "bytes32"
+						}
+					],
+					"name": "ChainlinkRequested",
+					"type": "event"
+				},
+				{
+					"anonymous": false,
+					"inputs": [
+						{
+							"indexed": true,
+							"name": "id",
+							"type": "bytes32"
+						}
+					],
+					"name": "ChainlinkFulfilled",
+					"type": "event"
+				},
+				{
+					"anonymous": false,
+					"inputs": [
+						{
+							"indexed": true,
+							"name": "id",
+							"type": "bytes32"
+						}
+					],
+					"name": "ChainlinkCancelled",
+					"type": "event"
+				}
+			]
+			var myContract = new web3.eth.Contract(abi,addr,{from:address});
+
+			myContract.methods.getState(_date,_id).send({from:address}).then(function (receipt){
+				console.log("receipt" + receipt);
+				myContract.methods.compensate().send({from:address},function (err,res){
+					console.log(err);
+					console.log(res);
+					if(!err){
+						alert("航班延误，赔付成功");
+						console.log("res" + res);
+					}else {
+						alert("航班没有延误，赔付失败");
+					}
+					console.log(data);
+					$('#money').empty();
+					$('#money').append(res);
+				})
+			})
+		})
+	</script>
+</body>
+</html>
