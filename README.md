@@ -1,6 +1,8 @@
 # Conflux北斗计划：曹二环队伍项目文档
 
-![图片1](D:\Desktop\图片1.png)
+
+
+![图片1.png](https://github.com/CaoErHuan/Conflux-Caoerhuan/blob/master/readmeimage/%E5%9B%BE%E7%89%871.png?raw=true)
 
 ## 项目说明
 
@@ -26,7 +28,7 @@
 
 图示如下：
 
-![image-20210912154313087](C:\Users\30422\AppData\Roaming\Typora\typora-user-images\image-20210912154313087.png)
+![image-20210912154313087.png](https://github.com/CaoErHuan/Conflux-Caoerhuan/blob/master/readmeimage/image-20210912154313087.png?raw=true)
 
 通过输入指定的参数，来实现合约的生成。
 
@@ -34,9 +36,11 @@
 
 平台后期开发了web界面，提供数据源的查看以及合约的创建、预言机节点积分信息的查询：
 
-![image-20210912154443837](C:\Users\30422\AppData\Roaming\Typora\typora-user-images\image-20210912154443837.png)
+![image-20210912154443837.png](https://github.com/CaoErHuan/Conflux-Caoerhuan/blob/master/readmeimage/image-20210912154443837.png?raw=true)
 
-![image-20210912154510100](C:\Users\30422\AppData\Roaming\Typora\typora-user-images\image-20210912154510100.png)
+
+
+![image-20210912154510100.png](https://github.com/CaoErHuan/Conflux-Caoerhuan/blob/master/readmeimage/image-20210912154510100.png?raw=true)
 
 
 
@@ -46,11 +50,11 @@
 
 1. 农场数据平台（获取线下传感器的温度湿度等数据，并显示在网页的地图上）
 
-![image-20210912154821251](C:\Users\30422\AppData\Roaming\Typora\typora-user-images\image-20210912154821251.png)
+![image-20210912154821251.png](https://github.com/CaoErHuan/Conflux-Caoerhuan/blob/master/readmeimage/image-20210912154821251.png?raw=true)
 
 2. 航班延误险理赔平台（获取航班API的信息，来判断是否航班延误，并利用智能合约进行理赔）
 
-![image-20210912154711218](C:\Users\30422\AppData\Roaming\Typora\typora-user-images\image-20210912154711218.png)
+![image-20210912154711218.png](https://github.com/CaoErHuan/Conflux-Caoerhuan/blob/master/readmeimage/image-20210912154711218.png?raw=true)
 
 ## 代码目录介绍
 
